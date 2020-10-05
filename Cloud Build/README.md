@@ -145,3 +145,6 @@ Confirm that your command shell knows that the build failed:
 ` echo $? `
 
 The command will reply with a non-zero value. If you had embedded this build in a script, your script would be able to act up on the build's failure.
+
+
+![Image of CloudBuild](https://github.com/IamVigneshC/Architecting-with-Google-Kubernetes-Engine-/blob/main/Cloud%20Build/CloudBuild.PNG)
