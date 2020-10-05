@@ -1,0 +1,95 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  annotations:
+    kubernetes.io/limit-ranger: 'LimitRanger plugin set: cpu request for container
+      nginx-1'
+  creationTimestamp: "2020-10-05T20:05:15Z"
+  generateName: nginx-1-76949974bb-
+  labels:
+    app: nginx-1
+    pod-template-hash: 76949974bb
+  name: nginx-1-76949974bb-l8h46
+  namespace: default
+  ownerReferences:
+  - apiVersion: apps/v1
+    blockOwnerDeletion: true
+    controller: true
+    kind: ReplicaSet
+    name: nginx-1-76949974bb
+    uid: 338fa162-7150-4427-baeb-65e41c99271c
+  resourceVersion: "3435"
+  selfLink: /api/v1/namespaces/default/pods/nginx-1-76949974bb-l8h46
+  uid: 81dfe75c-7be6-4927-832d-099a9dab64dc
+spec:
+  containers:
+  - image: nginx:latest
+    imagePullPolicy: Always
+    name: nginx-1
+    resources:
+      requests:
+        cpu: 100m
+    terminationMessagePath: /dev/termination-log
+    terminationMessagePolicy: File
+    volumeMounts:
+    - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+      name: default-token-p5f88
+      readOnly: true
+  dnsPolicy: ClusterFirst
+  enableServiceLinks: true
+  nodeName: gke-standard-cluster-1-default-pool-72144d15-mccf
+  priority: 0
+  restartPolicy: Always
+  schedulerName: default-scheduler
+  securityContext: {}
+  serviceAccount: default
+  serviceAccountName: default
+  terminationGracePeriodSeconds: 30
+  tolerations:
+  - effect: NoExecute
+    key: node.kubernetes.io/not-ready
+    operator: Exists
+    tolerationSeconds: 300
+  - effect: NoExecute
+    key: node.kubernetes.io/unreachable
+    operator: Exists
+    tolerationSeconds: 300
+  volumes:
+  - name: default-token-p5f88
+    secret:
+      defaultMode: 420
+      secretName: default-token-p5f88
+status:
+  conditions:
+  - lastProbeTime: null
+    lastTransitionTime: "2020-10-05T20:05:15Z"
+    status: "True"
+    type: Initialized
+  - lastProbeTime: null
+    lastTransitionTime: "2020-10-05T20:05:22Z"
+    status: "True"
+    type: Ready
+  - lastProbeTime: null
+    lastTransitionTime: "2020-10-05T20:05:22Z"
+    status: "True"
+    type: ContainersReady
+  - lastProbeTime: null
+    lastTransitionTime: "2020-10-05T20:05:15Z"
+    status: "True"
+    type: PodScheduled
+  containerStatuses:
+  - containerID: docker://919d18b0da6d1806ebe77e23574e75d7343567bee63bf7d53be9d9332a8acdbb
+    image: nginx:latest
+    imageID: docker-pullable://nginx@sha256:794275d96b4ab96eeb954728a7bf11156570e8372ecd5ed0cbc7280313a27d19
+    lastState: {}
+    name: nginx-1
+    ready: true
+    restartCount: 0
+    state:
+      running:
+        startedAt: "2020-10-05T20:05:21Z"
+  hostIP: 10.128.0.2
+  phase: Running
+  podIP: 10.8.0.5
+  qosClass: Burstable
+  startTime: "2020-10-05T20:05:15Z"
