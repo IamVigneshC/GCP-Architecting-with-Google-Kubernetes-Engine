@@ -81,3 +81,4 @@ In the Pod details page, you can click the Events and Logs tabs to view event de
 Click the YAML tab to view the detailed YAML file for the Pod configuration.
 
 
+![Image of DeployGKE](https://github.com/IamVigneshC/Architecting-with-Google-Kubernetes-Engine-/blob/main/Deploy%20GKE/DeployGKE.PNG)
