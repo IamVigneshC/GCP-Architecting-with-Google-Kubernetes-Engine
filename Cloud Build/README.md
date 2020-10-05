@@ -134,7 +134,7 @@ You will see output from the command that ends with text like this:
 
 Output:
 
-Finished Step #1
+Finished Step 1
 ERROR
 ERROR: build step 1 "gcr.io/ivil-charmer-227922klabs-gcp-49ab2930eea04/quickstart-image" failed: exit status 127
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
