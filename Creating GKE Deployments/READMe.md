@@ -305,6 +305,10 @@ When the deployment is complete, verify that both the nginx and the nginx-canary
 
 Switch back to the browser tab that is connected to the external LoadBalancer service ip and refresh the page. You should continue to see the standard "Welcome to nginx" page.
 
+
+![Image of DeployGKE](https://github.com/IamVigneshC/GCP-Architecting-with-Google-Kubernetes-Engine-/blob/main/Creating%20GKE%20Deployments/Deploy.PNG)
+
+
 Switch back to the Cloud Shell and scale down the primary deployment to 0 replicas.
 
 `kubectl scale --replicas=0 deployment nginx-deployment`
@@ -314,6 +318,9 @@ Verify that the only running replica is now the Canary deployment:
 `kubectl get deployments`
 
 Switch back to the browser tab that is connected to the external LoadBalancer service ip and refresh the page. You should continue to see the standard "Welcome to nginx" page showing that the Service is automatically balancing traffic to the canary deployment.
+
+![Image of DeployGKE](https://github.com/IamVigneshC/GCP-Architecting-with-Google-Kubernetes-Engine-/blob/main/Creating%20GKE%20Deployments/Deploy.PNG)
+
 
 Note: Session affinity
 The Service configuration used in the lab does not ensure that all requests from a single client will always connect to the same Pod. Each request is treated separately and can connect to either the normal nginx deployment or to the nginx-canary deployment. This potential to switch between different versions may cause problems if there are significant changes in functionality in the canary release. To prevent this you can set the sessionAffinity field to ClientIP in the specification of the service if you need a client's first request to determine which Pod will be used for all subsequent connections.
