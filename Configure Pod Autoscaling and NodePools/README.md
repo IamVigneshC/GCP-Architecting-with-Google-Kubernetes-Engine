@@ -1,5 +1,5 @@
 
-Task 1. Connect to the lab GKE cluster and deploy a sample workload
+## Task 1. Connect to the lab GKE cluster and deploy a sample workload
 In this task, you connect to the lab GKE cluster and create a deployment manifest for a set of Pods within the cluster.
 
 Connect to the lab GKE cluster
@@ -73,10 +73,8 @@ Output (do not copy)
 NAME      TYPE       CLUSTER-IP      EXTERNAL-IP   PORT(S)          AGE
 web       NodePort   10.11.246.185   <none>        8080:32056/TCP   12s
 
-Click Check my progress to verify the objective.
-Deploy a sample web application to GKE cluster
 
-Task 2. Configure autoscaling on the cluster
+## Task 2. Configure autoscaling on the cluster
 In this task, you configure the cluster to automatically scale the sample application that you deployed earlier.
 
 Configure autoscaling
