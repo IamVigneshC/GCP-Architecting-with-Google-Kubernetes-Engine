@@ -5,16 +5,16 @@ In this task, you connect to the lab GKE cluster and create a deployment manifes
 Connect to the lab GKE cluster
 In Cloud Shell, type the following command to set the environment variable for the zone and cluster name.
 
-export my_zone=us-central1-a
-export my_cluster=standard-cluster-1
+`export my_zone=us-central1-a`
+`export my_cluster=standard-cluster-1`
 
 Configure tab completion for the kubectl command-line tool.
 
-source <(kubectl completion bash)
+`source <(kubectl completion bash)`
 
 Configure access to your cluster for kubectl:
 
-gcloud container clusters get-credentials $my_cluster --zone $my_zone
+`gcloud container clusters get-credentials $my_cluster --zone $my_zone`
 
 Deploy a sample web application to your GKE cluster
 You will deploy a sample application to your cluster using the web.yaml deployment file that has been created for you:
@@ -44,31 +44,31 @@ This manifest creates a deployment using a sample web application container imag
 
 In Cloud Shell enter the following command to clone the repository to the lab Cloud Shell.
 
-git clone https://github.com/GoogleCloudPlatform/training-data-analyst
+`git clone https://github.com/GoogleCloudPlatform/training-data-analyst`
 
 Create a soft link as a shortcut to the working directory.
 
-ln -s ~/training-data-analyst/courses/ak8s/v1.1 ~/ak8s
+`ln -s ~/training-data-analyst/courses/ak8s/v1.1 ~/ak8s`
 
 Change to the directory that contains the sample files for this lab.
 
-cd ~/ak8s/Autoscaling/
+`cd ~/ak8s/Autoscaling/`
 
 To create a deployment from this file, execute the following command:
 
-kubectl create -f web.yaml --save-config
+`kubectl create -f web.yaml --save-config`
 
 Create a service resource of type NodePort on port 8080 for the web deployment.
 
-kubectl expose deployment web --target-port=8080 --type=NodePort
+`kubectl expose deployment web --target-port=8080 --type=NodePort`
 
 Verify that the service was created and that a node port was allocated:
 
-kubectl get service web
+`kubectl get service web`
 
 Your IP address and port number might be different from the example output.
 
-Output (do not copy)
+Output
 
 NAME      TYPE       CLUSTER-IP      EXTERNAL-IP   PORT(S)          AGE
 web       NodePort   10.11.246.185   <none>        8080:32056/TCP   12s
@@ -80,11 +80,11 @@ In this task, you configure the cluster to automatically scale the sample applic
 Configure autoscaling
 Get the list of deployments to determine whether your sample web application is still running.
 
-kubectl get deployment
+`kubectl get deployment`
 
 The output should look like the example.
 
-Output (do not copy)
+Output
 
 NAME   READY   UP-TO-DATE   AVAILABLE   AGE
 web    1/1     1            1           5m48s
@@ -93,15 +93,15 @@ If the web deployment of your application is not displayed, return to task 1 and
 
 To configure your sample application for autoscaling (and to set the maximum number of replicas to four and the minimum to one, with a CPU utilization target of 1%), execute the following command:
 
-kubectl autoscale deployment web --max 4 --min 1 --cpu-percent 1
+`kubectl autoscale deployment web --max 4 --min 1 --cpu-percent 1`
 
 When you use kubectl autoscale, you specify a maximum and minimum number of replicas for your application, as well as a CPU utilization target.
 
 Get the list of deployments to verify that there is still only one deployment of the web application.
 
-kubectl get deployment
+`kubectl get deployment`
 
-Output (do not copy)
+Output
 
 NAME   READY   UP-TO-DATE   AVAILABLE   AGE
 web    1/1     1            1           8m21s
@@ -111,22 +111,22 @@ The kubectl autoscale command you used in the previous task creates a Horizontal
 
 To get the list of HorizontalPodAutoscaler resources, execute the following command:
 
-kubectl get hpa
+`kubectl get hpa`
 
 The output should look like the example.
 
-Output (do not copy)
+Output
 
 NAME      REFERENCE        TARGETS   MINPODS   MAXPODS   REPLICAS   AGE
 web       Deployment/web   0%/1%     1         4         1          1m
 
 To inspect the configuration of HorizontalPodAutoscaler in YAML form, execute the following command:
 
-kubectl describe horizontalpodautoscaler web
+`kubectl describe horizontalpodautoscaler web`
 
 The output should look like the example.
 
-Output (do not copy)
+Output
 
 Name:                                                  web
 Namespace:                                             default
@@ -149,11 +149,11 @@ Events:           <none>
 
 To view the configuration of HorizontalPodAutoscaler in YAML form, execute the following command:
 
-kubectl get horizontalpodautoscaler web -o yaml
+`kubectl get horizontalpodautoscaler web -o yaml`
 
 The output should look like the example.
 
-Output (do not copy)
+Output
 
 apiVersion: autoscaling/v1
 kind: HorizontalPodAutoscaler
@@ -179,6 +179,7 @@ status:
   desiredReplicas: 1
 
 Test the autoscale configuration
+
 You need to create a heavy load on the web application to force it to scale out. You create a configuration file that defines a deployment of four containers that run an infinite loop of HTTP queries against the sample application web server.
 
 You create the load on your web application by deploying the loadgen application using the loadgen.yaml file that has been provided for you.
@@ -207,7 +208,7 @@ spec:
 
 To deploy this container, execute the following command:
 
-kubectl apply -f loadgen.yaml
+`kubectl apply -f loadgen.yaml`
 
 After you deploy this manifest, the web Pod should begin to scale.
 
@@ -216,11 +217,11 @@ Deploying the loadgen application
 
 Get the list of deployments to verify that the load generator is running.
 
-kubectl get deployment
+`kubectl get deployment`
 
 The output should look like the example.
 
-Output (do not copy)
+Output
 
 NAME      READY   UP-TO-DATE   AVAILABLE   AGE
 loadgen   4/4     4            4           26s
@@ -228,37 +229,37 @@ web       1/1     1            1           14m
 
 Inspect HorizontalPodAutoscaler.
 
-kubectl get hpa
+`kubectl get hpa`
 
 Once the loadgen Pod starts to generate traffic, the web deployment CPU utilization begins to increase. In the example output, the targets are now at 35% CPU utilization compared to the 1% CPU threshold.
 
-Output (do not copy)
+Output 
 
 NAME      REFERENCE        TARGETS   MINPODS   MAXPODS   REPLICAS   AGE
 web       Deployment/web   35%/1%    1         4         1          8m
 
 After a few minutes, inspect the HorizontalPodAutoscaler again.
 
-kubectl get hpa
+`kubectl get hpa`
 
 The autoscaler has increased the web deployment to four replicas.
 
-Output (do not copy)
+Output
 
 NAME      REFERENCE        TARGETS   MINPODS   MAXPODS   REPLICAS   AGE
 web       Deployment/web   88%/1%   1         4         4          9m
 
 To stop the load on the web application, scale the loadgen deployment to zero replicas.
 
-kubectl scale deployment loadgen --replicas 0
+`kubectl scale deployment loadgen --replicas 0`
 
 Get the list of deployments to verify that loadgen has scaled down.
 
-kubectl get deployment
+`kubectl get deployment`
 
 The loadgen deployment should have zero replicas.
 
-Output (do not copy)
+Output
 
 NAME      READY   UP-TO-DATE   AVAILABLE   AGE
 loadgen   0/0     0            0           3m40s
@@ -268,17 +269,17 @@ web       2/4     4            2           18m
 Note: You need to wait 2 to 3 minutes before you list the deployments again.
 Get the list of deployments to verify that the web application has scaled down to the minimum value of 1 replica that you configured when you deployed the autoscaler.
 
-kubectl get deployment
+`kubectl get deployment`
 
 You should now have one deployment of the web application.
 
-Output (do not copy)
+Output
 
 NAME      READY   UP-TO-DATE   AVAILABLE   AGE
 loadgen   0/0     0            0           6m28s
 web       4/4     4            4           20m
 
-Task 3. Manage node pools
+## Task 3. Manage node pools
 In this task, you create a new pool of nodes using preemptible instances, and then you constrain the web deployment to run only on the preemptible nodes.
 
 Add a node pool
@@ -292,13 +293,13 @@ If you receive an error that no preemptible instances are available you can remo
 
 Get the list of nodes to verify that the new nodes are ready.
 
-kubectl get nodes
+`kubectl get nodes`
 
 You should now have 4 nodes.
 
 Your names will be different from the example output.
 
-Output (do not copy)
+Output
 
 NAME                                       STATUS   ROLES    AGE   VERSION
 gke-standard-cluster-1-default-pool...xc   Ready    <none>   33m   v1.15.12-gke.2
@@ -310,13 +311,13 @@ All the nodes that you added have the temp=true label because you set that label
 
 To list only the nodes with the temp=true label, execute the following command:
 
-kubectl get nodes -l temp=true
+`kubectl get nodes -l temp=true`
 
 You should see only the two nodes that you added.
 
 Your names will be different from the example output.
 
-Output (do not copy)
+Output
 
 NAME                                       STATUS   ROLES    AGE     VERSION
 gke-standard-cluster-1-temp-pool-1-...vj   Ready    <none>   3m26s   v1.15.12-gke.2
@@ -328,7 +329,7 @@ To prevent the scheduler from running a Pod on the temporary nodes, you add a ta
 To add a taint to each of the newly created nodes, execute the following command.
 You can use the temp=true label to apply this change across all the new nodes simultaneously.
 
-kubectl taint node -l temp=true nodetype=preemptible:NoExecute
+`kubectl taint node -l temp=true nodetype=preemptible:NoExecute`
 
 To allow application Pods to execute on these tainted nodes, you must add a tolerations key to the deployment configuration.
 
@@ -392,7 +393,7 @@ spec:
 
 To apply this change, execute the following command:
 
-kubectl apply -f web.yaml
+`kubectl apply -f web.yaml`
 
 If you have problems editing this file successfully you can use the pre-prepared sample file called web-tolerations.yaml instead.
 
@@ -401,22 +402,22 @@ Manage node pools
 
 Get the list of Pods.
 
-kubectl get pods
+`kubectl get pods`
 
 Your names might be different from the example output.
 
-Output (do not copy)
+Output
 
 NAME                   READY     STATUS    RESTARTS   AGE
 web-7cb566bccd-pkfst   1/1       Running   0          1m
 
 To confirm the change, inspect the running web Pod(s) using the following command
 
-kubectl describe pods -l run=web
+`kubectl describe pods -l run=web`
 
 A Tolerations section with nodetype=preemptible in the list should appear near the bottom of the (truncated) output.
 
-Output (do not copy)
+Output
 
 <SNIP>
 
@@ -432,13 +433,13 @@ The output confirms that the Pods will tolerate the taint value on the new preem
 
 To force the web application to scale out again scale the loadgen deployment back to four replicas.
 
-kubectl scale deployment loadgen --replicas 4
+`kubectl scale deployment loadgen --replicas 4`
 
 You could scale just the web application directly but using the loadgen app will allow you to see how the different taint, toleration and nodeSelector settings that apply to the web and loadgen applications affect which nodes they are scheduled on.
 
 Get the list of Pods using thewide output format to show the nodes running the Pods
 
-kubectl get pods -o wide
+`kubectl get pods -o wide`
 
 This shows that the loadgen app is running only on default-pool nodes while the web app is running only the preemptible nodes in temp-pool-1.
 
