@@ -679,7 +679,7 @@ Example
 curl http://35.201.92.69/v1
 
 
-Output (do not copy)
+Output
 
 Hello, world!
 Version: 1.0.0
