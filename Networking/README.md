@@ -1,8 +1,8 @@
-Create and test a private cluster
+• Create and test a private cluster
 
-Configure a cluster for authorized network master access
+• Configure a cluster for authorized network master access
 
-Configure a Cluster network policy
+• Configure a Cluster network policy
 
 
 ## Task 1. Create a private cluster
@@ -11,10 +11,13 @@ In this task, you create a private cluster, consider the options for how private
 In a private cluster, the nodes have internal RFC 1918 IP addresses only, which ensures that their workloads are isolated from the public Internet. The nodes in a non-private cluster have external IP addresses, potentially allowing traffic to and from the internet.
 
 Set up a private cluster
-On the Navigation menu (8c24be286e75dbe7.png), click Kubernetes Engine > Clusters.
+On the Navigation menu , click Kubernetes Engine > Clusters.
 Click Create cluster.
+
 Name the cluster private-cluster.
+
 Select us-central1-a as the zone.
+
 Click on default-pool under NODE POOLS section and then enter 2 in Number of nodes section.
 Click on Networking section, select Enable VPC-native traffic routing (uses alias IP).
 In the Networking section, select Private cluster and select Access master using its external IP address.
@@ -29,7 +32,7 @@ Note: You need to wait a few minutes for the cluster deployment to complete.
 Inspect your cluster
 In the Cloud Shell, enter the following command to review the details of your new cluster:
 
-gcloud container clusters describe private-cluster --region us-central1-a
+`gcloud container clusters describe private-cluster --region us-central1-a`
 
 The following values appear only under the private cluster:
 
@@ -47,7 +50,7 @@ You might use private clusters to provide services such as internal APIs that ar
 Click Check my progress to verify the objective.
 Create a private cluster
 
-Task 2. Add an authorized network for cluster master access
+## Task 2. Add an authorized network for cluster master access
 After cluster creation, you might want to issue commands to your cluster from outside Google Cloud. For example, you might decide that only your corporate network should issue commands to your cluster master. Unfortunately, you didn't specify the authorized network on cluster creation.
 
 In this task, you add an authorized network for cluster master access.
@@ -70,26 +73,26 @@ Click Save at the bottom of the menu.
 Click Check my progress to verify the objective.
 Add an authorized network for cluster master access
 
-Task 3. Create a cluster network policy
+## Task 3. Create a cluster network policy
 In this task, you create a cluster network policy to restrict communication between the Pods. A zero-trust zone is important to prevent lateral attacks within the cluster when an intruder compromises one of the Pods.
 
 Create a GKE cluster
 In Cloud Shell, type the following command to set the environment variable for the zone and cluster name.
 
-export my_zone=us-central1-a
-export my_cluster=standard-cluster-1
+`export my_zone=us-central1-a`
+`export my_cluster=standard-cluster-1`
 
 Configure kubectl tab completion in Cloud Shell.
 
-source <(kubectl completion bash)
+`source <(kubectl completion bash)`
 
 In Cloud Shell, type the following command to create a Kubernetes cluster. Note that this command adds the additional flag --enable-network-policy to the parameters you have used in previous labs. This flag allows this cluster to use cluster network policies.
 
-gcloud container clusters create $my_cluster --num-nodes 3 --enable-ip-alias --zone $my_zone --enable-network-policy
+`gcloud container clusters create $my_cluster --num-nodes 3 --enable-ip-alias --zone $my_zone --enable-network-policy`
 
 In Cloud Shell, configure access to your cluster for the kubectl command-line tool, using the following command:
 
-gcloud container clusters get-credentials $my_cluster --zone $my_zone
+`gcloud container clusters get-credentials $my_cluster --zone $my_zone`
 
 Run a simple web server application with the label app=hello, and expose the web application internally in the cluster.
 
@@ -98,15 +101,15 @@ kubectl create deployment hello-web --labels app=hello \
 
 In Cloud Shell enter the following command to clone the repository to the lab Cloud Shell.
 
-git clone https://github.com/GoogleCloudPlatform/training-data-analyst
+`git clone https://github.com/GoogleCloudPlatform/training-data-analyst`
 
 Create a soft link as a shortcut to the working directory.
 
-ln -s ~/training-data-analyst/courses/ak8s/v1.1 ~/ak8s
+`ln -s ~/training-data-analyst/courses/ak8s/v1.1 ~/ak8s`
 
 Change to the directory that contains the sample files for this lab.
 
-cd ~/ak8s/GKE_Networks/
+`cd ~/ak8s/GKE_Networks/`
 
 Restrict incoming traffic to Pods
 A sample NetworkPolicy manifest file called hello-allow-from-foo.yaml has been provided for you. This manifest file defines an ingress policy that allows access to Pods labeled app: hello from Pods labeled app: foo.
@@ -129,13 +132,13 @@ spec:
 
 Create an ingress policy.
 
-kubectl apply -f hello-allow-from-foo.yaml
+`kubectl apply -f hello-allow-from-foo.yaml`
 
 Verify that the policy was created.
 
-kubectl get networkpolicy
+`kubectl get networkpolicy`
 
-Output (Do not copy)
+Output
 
 NAME                   POD-SELECTOR   AGE
 hello-allow-from-foo   app=hello      7s
@@ -143,7 +146,7 @@ hello-allow-from-foo   app=hello      7s
 Validate the ingress policy
 Run a temporary Pod called test-1 with the label app=foo and get a shell in the Pod.
 
-kubectl create deployment test-1 --labels app=foo --image=alpine --restart=Never --rm --stdin --tty
+`kubectl create deployment test-1 --labels app=foo --image=alpine --restart=Never --rm --stdin --tty`
 
 Note: The kubectl switches used here in conjunction with the run command are important to note.
 
@@ -161,7 +164,7 @@ Make a request to the hello-web:8080 endpoint to verify that the incoming traffi
 
 wget -qO- --timeout=2 http://hello-web:8080
 
-Output (Do not copy)
+Output
 
 If you don't see a command prompt, try pressing enter.
 / # wget -qO- --timeout=2 http://hello-web:8080
@@ -174,15 +177,15 @@ Type exit and press ENTER to leave the shell.
 
 Now you will run a different Pod using the same Pod name but using a label, app=other, that does not match the podSelector in the active network policy. This Pod should not have the ability to access the hello-web application.
 
-kubectl create deployment test-1 --labels app=other --image=alpine --restart=Never --rm --stdin --tty
+`kubectl create deployment test-1 --labels app=other --image=alpine --restart=Never --rm --stdin --tty`
 
 Make a request to the hello-web:8080 endpoint to verify that the incoming traffic is not allowed.
 
-wget -qO- --timeout=2 http://hello-web:8080
+`wget -qO- --timeout=2 http://hello-web:8080`
 
 The request times out.
 
-Output (Do not copy)
+Output
 
 If you don't see a command prompt, try pressing enter.
 / # wget -qO- --timeout=2 http://hello-web:8080
@@ -218,13 +221,13 @@ spec:
 
 Create an egress policy.
 
-kubectl apply -f foo-allow-to-hello.yaml
+`kubectl apply -f foo-allow-to-hello.yaml`
 
 Verify that the policy was created.
 
-kubectl get networkpolicy
+`kubectl get networkpolicy`
 
-Output (Do not copy)
+Output
 
 NAME                   POD-SELECTOR   AGE
 foo-allow-to-hello     app=foo        7s
@@ -233,18 +236,19 @@ hello-allow-from-foo   app=hello      5m
 Validate the egress policy
 Deploy a new web application called hello-web-2 and expose it internally in the cluster.
 
-kubectl run hello-web-2 --labels app=hello-2 \
-  --image=gcr.io/google-samples/hello-app:1.0 --port 8080 --expose
+`kubectl run hello-web-2 --labels app=hello-2 \`
+
+ ` --image=gcr.io/google-samples/hello-app:1.0 --port 8080 --expose`
 
 Run a temporary Pod with the app=foo label and get a shell prompt inside the container.
 
-kubectl run test-3 --labels app=foo --image=alpine --restart=Never --rm --stdin --tty
+`kubectl run test-3 --labels app=foo --image=alpine --restart=Never --rm --stdin --tty`
 
 Verify that the Pod can establish connections to hello-web:8080.
 
-wget -qO- --timeout=2 http://hello-web:8080
+`wget -qO- --timeout=2 http://hello-web:8080`
 
-Output (Do not copy)
+Output
 
 If you don't see a command prompt, try pressing enter.
 / # wget -qO- --timeout=2 http://hello-web:8080
@@ -255,12 +259,12 @@ Hostname: hello-web-8b44b849-k96lh
 
 Verify that the Pod cannot establish connections to hello-web-2:8080.
 
-wget -qO- --timeout=2 http://hello-web-2:8080
+`wget -qO- --timeout=2 http://hello-web-2:8080`
 
 This fails because none of the Network policies you have defined allow traffic to Pods labelled app: hello-2.
 
 Verify that the Pod cannot establish connections to external websites, such as www.example.com.
 
-wget -qO- --timeout=2 http://www.example.com
+`wget -qO- --timeout=2 http://www.example.com`
 
 This fails because the network policies do not allow external http traffic (tcp port 80).
