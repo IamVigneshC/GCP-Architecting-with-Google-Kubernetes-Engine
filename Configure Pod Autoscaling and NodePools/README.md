@@ -1,8 +1,8 @@
 
-## Task 1. Connect to the lab GKE cluster and deploy a sample workload
-In this task, you connect to the lab GKE cluster and create a deployment manifest for a set of Pods within the cluster.
+## Task 1. Connect to the GKE cluster and deploy a sample workload
+Connect to the GKE cluster and create a deployment manifest for a set of Pods within the cluster.
 
-Connect to the lab GKE cluster
+Connect to the  GKE cluster
 In Cloud Shell, type the following command to set the environment variable for the zone and cluster name.
 
 `export my_zone=us-central1-a`
